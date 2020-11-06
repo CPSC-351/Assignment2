@@ -10,7 +10,8 @@
 #define SHARED_MEMORY_CHUNK_SIZE 1000
 
 /* The ids for the shared memory segment and the message queue */
-int shmid, msqid;
+int shmid;
+int msqid;
 
 /* The pointer to the shared memory */
 void* sharedMemPtr;
@@ -23,7 +24,7 @@ void* sharedMemPtr;
 void init(int& shmid, int& msqid, void*& sharedMemPtr)
 {
 	/* TODO: 
-        1. Create a file called keyfile.txt containing string "Hello world" (you may do
+    1. Create a file called keyfile.txt containing string "Hello world" (you may do
  	    so manually or from the code).
 	2. Use ftok("keyfile.txt", 'a') in order to generate the key.
 	3. Use will use this key in the TODO's below. Use the same key for the queue
@@ -36,7 +37,11 @@ void init(int& shmid, int& msqid, void*& sharedMemPtr)
 
 	
 	/* TODO: Get the id of the shared memory segment. The size of the segment must be SHARED_MEMORY_CHUNK_SIZE */
+	shmid = shmget(IPC_PRIVATE, SHARED_MEMORY_CHUNK_SIZE, IPC_CREAT);
 	/* TODO: Attach to the shared memory */
+	shmat(shmid, sharedMemPtr, IPC_CREAT);
+	
+	
 	/* TODO: Attach to the message queue */
 	/* Store the IDs and the pointer to the shared memory region in the corresponding function parameters */
 	

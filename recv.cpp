@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string>
+#include <sys/stat.h>
 #include "msg.h"    /* For the message struct */
 
 using namespace std;
@@ -30,13 +31,18 @@ string recvFileName()
         
 	/* TODO: declare an instance of the fileNameMsg struct to be
 	 * used for holding the message received from the sender.
-         */
+    */
+   fileNameMsg msg;
 
-        /* TODO: Receive the file name using msgrcv() */
+    /* TODO: Receive the file name using msgrcv() */
+	if (msgrcv(msqid, &msg, sizeof(fileNameMsg) - sizeof(long), FILE_NAME_TRANSFER_TYPE, 0) < 0) {
+		perror("msgrcv");
+		exit(-1);
+	}
 	
 	/* TODO: return the received file name */
 	
-        return fileName;
+    return msg.fileName;
 }
  /**
  * Sets up the shared memory segment and message queue
@@ -57,16 +63,37 @@ void init(int& shmid, int& msqid, void*& sharedMemPtr)
 	   like the file name and the id is like the file object.  Every System V object 
 	   on the system has a unique id, but different objects may have the same key.
 	*/
-	
+	key_t key = ftok("keyfile.txt", 'a');
+
+	if (key < 0) {
+		perror("ftok");
+		exit(-1);
+	}
 
 	/* TODO: Allocate a shared memory segment. The size of the segment must be SHARED_MEMORY_CHUNK_SIZE. */
-	
+	shmid = shmget(key, SHARED_MEMORY_CHUNK_SIZE, IPC_CREAT | S_IRUSR | S_IWUSR);
+
+	if (shmid < 0) {
+		perror("shmget");
+		exit(-1);
+	}
+
 	/* TODO: Attach to the shared memory */
+	sharedMemPtr = shmat(shmid, NULL, 0);
+
+	if (sharedMemPtr < 0) {
+		perror("shmat");
+		exit(-1);
+	}
 	
 	/* TODO: Create a message queue */
-	
+	msqid = msgget(key, 0666 | IPC_CREAT);
+
 	/* TODO: Store the IDs and the pointer to the shared memory region in the corresponding parameters */
-	
+	if (msqid < 0) {
+		perror("msgget");
+		exit(-1);
+	}
 }
  
 
@@ -116,6 +143,14 @@ unsigned long mainLoop(const char* fileName)
 		 * <ORIGINAL FILENAME__recv>. For example, if the name of the original
 		 * file is song.mp3, the name of the received file is going to be song.mp3__recv.
 		 */
+		message receiveMsg;
+
+		if (msgrcv(msqid, &receiveMsg, sizeof(message) - sizeof(long), SENDER_DATA_TYPE, 0) < 0) {
+			perror("msgrcv");
+			exit(-1);
+		}
+
+		msgSize = receiveMsg.size;
 		
 		/* If the sender is not telling us that we are done, then get to work */
 		if(msgSize != 0)
