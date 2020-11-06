@@ -32,12 +32,14 @@ void init(int& shmid, int& msqid, void*& sharedMemPtr)
 	   like the file name and the id is like the file object.  Every System V object 
 	   on the system has a unique id, but different objects may have the same key.
 	*/
-	
-
+	key_t key = ftok("keyfile.txt", 'a');
 	
 	/* TODO: Get the id of the shared memory segment. The size of the segment must be SHARED_MEMORY_CHUNK_SIZE */
+	shmid = shmget(key, SHARED_MEMORY_CHUNK_SIZE);
 	/* TODO: Attach to the shared memory */
+	shmat(shmid); //?? Maybe
 	/* TODO: Attach to the message queue */
+	msgsnd(msqid,sharedMemPtr); //?? Maybe 
 	/* Store the IDs and the pointer to the shared memory region in the corresponding function parameters */
 	
 }
