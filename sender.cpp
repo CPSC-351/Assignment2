@@ -18,33 +18,35 @@ void* sharedMemPtr;
 
 /**
  * Sets up the shared memory segment and message queue
- * @param shmid - the id of the allocated shared memory 
+ * @param shmid - the id of the allocated shared memory
  * @param msqid - the id of the allocated message queue
  */
 void init(int& shmid, int& msqid, void*& sharedMemPtr)
 {
-	/* TODO: 
+	/* TODO:
     1. Create a file called keyfile.txt containing string "Hello world" (you may do
  	    so manually or from the code).
 	2. Use ftok("keyfile.txt", 'a') in order to generate the key.
 	3. Use will use this key in the TODO's below. Use the same key for the queue
 	   and the shared memory segment. This also serves to illustrate the difference
  	   between the key and the id used in message queues and shared memory. The key is
-	   like the file name and the id is like the file object.  Every System V object 
+	   like the file name and the id is like the file object.  Every System V object
 	   on the system has a unique id, but different objects may have the same key.
 	*/
-	
 
-	
+
+
 	/* TODO: Get the id of the shared memory segment. The size of the segment must be SHARED_MEMORY_CHUNK_SIZE */
 	shmid = shmget(IPC_PRIVATE, SHARED_MEMORY_CHUNK_SIZE, IPC_CREAT);
 	/* TODO: Attach to the shared memory */
-	shmat(shmid, sharedMemPtr, IPC_CREAT);
-	
-	
+	sharedMemPtr = shmat(shmid, sharedMemPtr, IPC_CREAT);
+
+
 	/* TODO: Attach to the message queue */
 	/* Store the IDs and the pointer to the shared memory region in the corresponding function parameters */
-	
+	msqid = msgget(key, 0644);
+
+
 }
 
 /**
@@ -56,6 +58,7 @@ void init(int& shmid, int& msqid, void*& sharedMemPtr)
 void cleanUp(const int& shmid, const int& msqid, void* sharedMemPtr)
 {
 	/* TODO: Detach from shared memory */
+	shmdt(sharedMemPtr);
 }
 
 /**
@@ -67,14 +70,14 @@ unsigned long sendFile(const char* fileName)
 {
 
 	/* A buffer to store message we will send to the receiver. */
-	message sndMsg; 
-	
+	message sndMsg;
+
 	/* A buffer to store message received from the receiver. */
 	ackMessage rcvMsg;
-		
+
 	/* The number of bytes sent */
 	unsigned long numBytesSent = 0;
-	
+
 	/* Open the file */
 	FILE* fp =  fopen(fileName, "r");
 
@@ -84,7 +87,7 @@ unsigned long sendFile(const char* fileName)
 		perror("fopen");
 		exit(-1);
 	}
-	
+
 	/* Read the whole file */
 	while(!feof(fp))
 	{
@@ -94,28 +97,33 @@ unsigned long sendFile(const char* fileName)
 		 * SHARED_MEMORY_CHUNK_SIZE. Save the number of bytes that were actually
 		 * read in numBytesSent to record how many bytes were actually send.
  		 */
-		
-		/* TODO: count the number of bytes sent. */		
-			
+
+		/* TODO: count the number of bytes sent. */
+		sndMsg.size = fread(sharedMemPtr, sizeof(char), SHARED_MEMORY_CHUNK_SIZEm fp)
+
 		/* TODO: Send a message to the receiver telling him that the data is ready
  		 * to be read (message of type SENDER_DATA_TYPE).
  		 */
-		
-		/* TODO: Wait until the receiver sends us a message of type RECV_DONE_TYPE telling us 
- 		 * that he finished saving a chunk of memory. 
+    msgsnd(msqid, &sndMsg, sizeof(struct message) - sizeof(long), 0);
+
+		/* TODO: Wait until the receiver sends us a message of type RECV_DONE_TYPE telling us
+ 		 * that he finished saving a chunk of memory.
  		 */
+		msgrcv(msqid, &rcvMsg, sizeof(struct message) - sizeof(long), RECV_DONE_TYPE, 0);
 	}
-	
+
 
 	/** TODO: once we are out of the above loop, we have finished sending the file.
  	  * Lets tell the receiver that we have nothing more to send. We will do this by
- 	  * sending a message of type SENDER_DATA_TYPE with size field set to 0. 	
+ 	  * sending a message of type SENDER_DATA_TYPE with size field set to 0.
 	  */
+  sndNsg.size = 0;
 
-		
+		msgsnd(msqid, &sndMsg, sizeof(struct message) - sizeof(long), 0);
+
 	/* Close the file */
 	fclose(fp);
-	
+
 	return numBytesSent;
 }
 
@@ -128,7 +136,7 @@ void sendFileName(const char* fileName)
 	/* Get the length of the file name */
 	int fileNameSize = strlen(fileName);
 
-	/* TODO: Make sure the file name does not exceed 
+	/* TODO: Make sure the file name does not exceed
 	 * the maximum buffer size in the fileNameMsg
 	 * struct. If exceeds, then terminate with an error.
 	 */
@@ -147,25 +155,25 @@ void sendFileName(const char* fileName)
 
 int main(int argc, char** argv)
 {
-	
+
 	/* Check the command line arguments */
 	if(argc < 2)
 	{
 		fprintf(stderr, "USAGE: %s <FILE NAME>\n", argv[0]);
 		exit(-1);
 	}
-		
+
 	/* Connect to shared memory and the message queue */
 	init(shmid, msqid, sharedMemPtr);
-	
+
 	/* Send the name of the file */
         sendFileName(argv[1]);
-		
+
 	/* Send the file */
 	fprintf(stderr, "The number of bytes sent is %lu\n", sendFile(argv[1]));
-	
+
 	/* Cleanup */
 	cleanUp(shmid, msqid, sharedMemPtr);
-		
+
 	return 0;
 }
