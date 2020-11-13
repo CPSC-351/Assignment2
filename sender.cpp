@@ -104,7 +104,7 @@ unsigned long sendFile(const char* fileName)
 		/* TODO: Send a message to the receiver telling him that the data is ready
  		 * to be read (message of type SENDER_DATA_TYPE).
  		 */
-    msgsnd(msqid, &sndMsg, sizeof(struct message) - sizeof(long), 0);
+		msgsnd(msqid, &sndMsg, sizeof(struct message) - sizeof(long), 0);
 
 		/* TODO: Wait until the receiver sends us a message of type RECV_DONE_TYPE telling us
  		 * that he finished saving a chunk of memory.
@@ -117,9 +117,9 @@ unsigned long sendFile(const char* fileName)
  	  * Lets tell the receiver that we have nothing more to send. We will do this by
  	  * sending a message of type SENDER_DATA_TYPE with size field set to 0.
 	  */
-  sndNsg.size = 0;
-
-		msgsnd(msqid, &sndMsg, sizeof(struct message) - sizeof(long), 0);
+	sndNsg.size = 0;
+	
+	msgsnd(msqid, &sndMsg, sizeof(struct message) - sizeof(long), 0);
 
 	/* Close the file */
 	fclose(fp);
