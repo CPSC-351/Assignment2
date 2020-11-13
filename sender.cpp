@@ -117,7 +117,7 @@ unsigned long sendFile(const char* fileName)
  	  * Lets tell the receiver that we have nothing more to send. We will do this by
  	  * sending a message of type SENDER_DATA_TYPE with size field set to 0.
 	  */
-	sndNsg.size = 0;
+	sndMsg.size = 0;
 	
 	msgsnd(msqid, &sndMsg, sizeof(struct message) - sizeof(long), 0);
 
