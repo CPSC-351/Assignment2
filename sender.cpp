@@ -99,7 +99,7 @@ unsigned long sendFile(const char* fileName)
  		 */
 
 		/* TODO: count the number of bytes sent. */
-		sndMsg.size = fread(sharedMemPtr, sizeof(char), SHARED_MEMORY_CHUNK_SIZEm fp)
+		sndMsg.size = fread(sharedMemPtr, sizeof(char), SHARED_MEMORY_CHUNK_SIZE, fp)
 
 		/* TODO: Send a message to the receiver telling him that the data is ready
  		 * to be read (message of type SENDER_DATA_TYPE).
