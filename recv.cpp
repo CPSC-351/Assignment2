@@ -1,10 +1,13 @@
 #include <sys/shm.h>
 #include <sys/msg.h>
+#include <sys/stat.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "msg.h"    /* For the message struct */
+#include <iostream>
+#include <string>
 
 /* The size of the shared memory chunk */
 #define SHARED_MEMORY_CHUNK_SIZE 1000
@@ -16,7 +19,7 @@ int shmid, msqid;
 void *sharedMemPtr;
 
 /* The name of the received file */
-const char recvFileName[] = "recvfile";
+const char recvFileName[] = "recvFile";
 
 /**
  * Sets up the shared memory segment and message queue
@@ -39,33 +42,34 @@ void init(int& shmid, int& msqid, void*& sharedMemPtr)
 			is unique system-wide among all System V objects. Two objects, on the other hand,
 			may have the same key.
 	 */
-	printf("Initalizing everything in reciever...\n");
+	printf("Initalizing everything in receiver...\n");
 	key_t key = ftok("keyfile.txt", 'a');
-	if (key == -1)
+	if (key < 0)
 	{
 		perror("ftok");
-		exit(1);
+		exit(1-1);
 	}
 
 	/* TODO: Allocate a piece of shared memory. The size of the segment must be SHARED_MEMORY_CHUNK_SIZE. */
-	shmid = shmget(key, SHARED_MEMORY_CHUNK_SIZE, 0644);
-	if (shmid == -1)
+	shmid = shmget(key, SHARED_MEMORY_CHUNK_SIZE, IPC_CREAT | IPC_EXCL | S_IRUSR |S_IWUSR);
+	if (shmid < 0)
 	{
 		perror("shmget");
 		exit(1);
 	}
+	std::cout << "shmid: " << std::endl;
 
 	/* TODO: Attach to the shared memory */
-	sharedMemPtr = shmat(shmid, (void *)0, 0);
-	if (sharedMemPtr == (void *) -1)
+	sharedMemPtr = shmat(shmid, NULL, 0);
+	if (((void*)sharedMemPtr) < 0)
 	{
 		perror("shmat");
-		exit(1);
+		exit(-1);
 	}
 
 	/* TODO: Create a message queue */
-	msqid = msgget(key, 0666);
-	if (msqid == -1)
+	msqid = msgget(key, 0666| IPC_CREAT);
+	if (msqid < 0)
 	{
 		perror("msgget");
 		exit(1);
@@ -83,7 +87,7 @@ void init(int& shmid, int& msqid, void*& sharedMemPtr)
 void mainLoop()
 {
 	/* The size of the mesage */
-	int msgSize = 0;
+	int msgSize = -1;
 	
 	/* Open the file for writing */
 	FILE* fp = fopen(recvFileName, "w");
@@ -216,7 +220,8 @@ int main(int argc, char** argv)
 	/* Initialize */
 	init(shmid, msqid, sharedMemPtr);
 	
-	printf("Starting reciever program...\n");
+
+	printf("Starting receiver program...\n");
 	/* Go to the main loop */
 	mainLoop();
 
