@@ -20,4 +20,4 @@ Have the first terminal run
 ## Then have the second terminal run
 * `./sender <FILE_NAME>`
 
-No extra credit :(
+No extra credit <b>:(</b>
