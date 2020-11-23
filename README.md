@@ -10,13 +10,14 @@ Dustin Vuong - dhvuong@csu.fullerton.edu
 
 ## To Execute this on Tuffix: first clone the repository:
 `git clone git clone https://github.com/CPSC-351/Assignment1.git` <br>
-Then run: `make`
+## Then run: 
+* `make`
 
-Then have 2 terminals open:
+## Then have 2 terminals open:
 Have the first terminal run
 * `./recv`
 
-Then have the second terminal run
+## Then have the second terminal run
 * `./sender <FILE_NAME>`
 
 No extra credit :(
