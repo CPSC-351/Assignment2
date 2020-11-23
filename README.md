@@ -1,5 +1,6 @@
 # Assignment2
-Group Members: Sagar Joshi - sagar0698@csu.fullerton.edu 
+Group Members: 
+Sagar Joshi - sagar0698@csu.fullerton.edu 
 
 Robert Kenny - rlkenny@csu.fullerton.edu 
 
