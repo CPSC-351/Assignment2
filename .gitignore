@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+nano .gitignore
+add "recv"
+add "sender"
