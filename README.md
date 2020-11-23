@@ -12,6 +12,13 @@ Dustin Vuong - dhvuong@csu.fullerton.edu
 
 Language used: C++
 
-Execution: Open two terminals and type make to compile the files. After, run ./recv on the first terminal and ./sender on the second.
+Execution:
+First run: `make`
+Then have 2 terminals open:
+Have the first terminal run
+* `./recv`
+
+Then have the second terminal run
+* `./sender <FILE_NAME>`
 
 No extra credit :(
