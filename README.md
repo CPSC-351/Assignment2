@@ -1,5 +1,13 @@
 # Assignment2
-Group Members: Sagar Joshi - sagar0698@csu.fullerton.edu Robert Kenny - rlkenny@csu.fullerton.edu Stephanie Casillas - stepc25@csu.fullerton.edu Tiffany Hernaez - tiffannyhernaez@csu.fullerton.edu Dustin Vuong - dhvuong@csu.fullerton.edu
+Group Members: Sagar Joshi - sagar0698@csu.fullerton.edu 
+
+Robert Kenny - rlkenny@csu.fullerton.edu 
+
+Stephanie Casillas - stepc25@csu.fullerton.edu 
+
+Tiffany Hernaez - tiffannyhernaez@csu.fullerton.edu 
+
+Dustin Vuong - dhvuong@csu.fullerton.edu
 
 Language used: C++
 
