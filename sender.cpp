@@ -160,8 +160,7 @@ unsigned long sendFile(const char* fileName)
      * telling us that he finished saving a chunk of memory.
      */
     // Error check the recv message
-    if(msgrcv(msqid,&rcvMsg,sizeof(ackMessage)-sizeof(long),
-      RECV_DONE_TYPE,0)<0)
+    if(msgrcv(msqid,&rcvMsg,sizeof(ackMessage)-sizeof(long), RECV_DONE_TYPE,0)<0)
       {
         perror("msgrcv");
         exit(-1);
