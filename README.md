@@ -1,19 +1,16 @@
 # Assignment2
-## Group Members: 
+## Group Members: <br>
 Sagar Joshi - sagar0698@csu.fullerton.edu 
-
 Robert Kenny - rlkenny@csu.fullerton.edu 
-
 Stephanie Casillas - stepc25@csu.fullerton.edu 
-
 Tiffany Hernaez - tiffannyhernaez@csu.fullerton.edu 
-
 Dustin Vuong - dhvuong@csu.fullerton.edu
 
-Language used: C++
+<b>Language used: C++<b>
 
-## Execution:
-First run: `make`
+## To Execute this on Tuffix: first clone the repository:
+`git clone git clone https://github.com/CPSC-351/Assignment1.git`
+Then run: `make`
 
 Then have 2 terminals open:
 Have the first terminal run
