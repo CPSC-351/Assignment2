@@ -7,7 +7,6 @@ Robert Kenny - rlkenny@csu.fullerton.edu
 Stephanie Casillas - stepc25@csu.fullerton.edu 
 
 Tiffany Hernaez - tiffannyhernaez@csu.fullerton.edu 
-
 Dustin Vuong - dhvuong@csu.fullerton.edu
 
 <b>Language used: C++<b>
