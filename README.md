@@ -13,7 +13,7 @@ Dustin Vuong - dhvuong@csu.fullerton.edu
 <b>Language used: C++<b>
 
 ## To Execute this on Tuffix: first clone the repository:
-`git clone git clone https://github.com/CPSC-351/Assignment1.git` <br>
+`git clone https://github.com/CPSC-351/Assignment1.git` <br>
 ## Then run: 
 * `make`
 
